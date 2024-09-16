@@ -29,7 +29,7 @@ public class PlayerStateHandler : MonoBehaviour, IInteractable
 
     private void Awake()
     {
-        rb = GetComponent<Rigidbody2D>();
+        rb = GetComponent<Rigidbody>();
 
         if (instance == null)
             instance = this;
