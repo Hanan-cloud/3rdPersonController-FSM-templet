@@ -2,11 +2,15 @@ using UnityEngine;
 
 public abstract class PlayerBaseState
 {
-    protected PlayerStateHandler playerStateHandler;
+    protected PlayerStateHandler StateHandler;
     protected string stateName = "";
+
+    float turnSmoothTime = 0.1f;
+    float turnSmoothVelocity;
+    Vector3 moveDir;
     public PlayerBaseState(PlayerStateHandler stateHandler)
     {
-        playerStateHandler = stateHandler;
+        StateHandler = stateHandler;
     }
 
     public abstract void EnterState();
@@ -16,20 +20,26 @@ public abstract class PlayerBaseState
 
     public virtual void Moving()
     {
-        //if (playerStateHandler.IsMoving)
-        //{
-        //   // playerStateHandler.Rb.velocity = new Vector2(playerStateHandler.MoveDirection.x * playerStateHandler.CurrentSpeed, playerStateHandler.Rb.velocity.y);
+        if (StateHandler.IsMoving)
+        {
+            float targetAngle = Mathf.Atan2(StateHandler.MoveDir.x, StateHandler.MoveDir.y) * Mathf.Rad2Deg + Camera.main.transform.eulerAngles.y;
+            float angle = Mathf.SmoothDampAngle(StateHandler.transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
 
-        //}
+            StateHandler.transform.rotation = Quaternion.Euler(0f, angle, 0f);
+             moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
+            StateHandler.Controller.Move(moveDir.normalized * StateHandler.CurrentSpeed * Time.deltaTime);
+        }
+      
+
+
+
+
     }
-    public virtual void InputHandler()
+
+    public void Acceleration()
     {
-        //if (playerStateHandler.IsMoving)
-        //{
-        //   // playerStateHandler.SwitchState(playerStateHandler.playerMovingState);
-        //}
+        //_currentSpeed = 
     }
-
 
     public virtual string GetStateName()
     {

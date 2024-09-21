@@ -9,8 +9,10 @@ public class PlayerIdleState : PlayerBaseState
 
     public override void EnterState()
     {
-
+        PlayerAnimation.instance.ChangeAnimation(PlayerStates.idle);
+        Debug.Log(stateName);
     }
+
 
     public override void FixedUpdateState()
     {
@@ -19,6 +21,10 @@ public class PlayerIdleState : PlayerBaseState
 
     public override void UpdateState()
     {
+
+        base.Moving();
+        if(StateHandler.IsMoving) { StateHandler.SwitchState(StateHandler.playerWalkState); }
+
 
     }
 
